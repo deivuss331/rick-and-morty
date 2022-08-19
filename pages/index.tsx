@@ -1,46 +1,60 @@
-import type { NextPage, GetServerSidePropsResult } from 'next';
+import type { NextPage, GetServerSideProps, GetServerSidePropsResult } from 'next';
 import type { ApiCharactersPageResponse, ApiCharactersPageVariables } from 'graphQl/queries/characters';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useLazyQuery } from '@apollo/client';
 import apolloClient from 'apolloClient';
 import { GET_CHARACTERS_PAGE } from 'graphQl/queries/characters';
-import { Container, Pagination, ScreenSizeLoader, SearchForm } from 'components/layout';
+import { SearchForm } from 'components/form';
+import { Container, Pagination, ScreenSizeLoader } from 'components/layout';
 import { CharactersList, CharacterCard } from 'components/characters';
 
 const DEFAULT_PAGE = 1;
-
-const SEARCH_FORM_NAME_QUERY_PARAM = 'name';
-const PAGE_QUERY_PARAM = 'page';
+const SEARCH_PARAMS = {
+  PAGE: 'page',
+  SEARCH_FORM: {
+    NAME: 'name',
+  },
+};
 
 const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacters }) => {
   const router = useRouter();
-  const [fetchCharactersPage, { loading, data }] = useLazyQuery<
+  const [fetchCharactersPage, { data, loading: isLoading }] = useLazyQuery<
     ApiCharactersPageResponse,
     ApiCharactersPageVariables
   >(GET_CHARACTERS_PAGE);
 
-  const searchFormName = router.query[SEARCH_FORM_NAME_QUERY_PARAM] as string | undefined;
-  const currentPage = router.query[PAGE_QUERY_PARAM] ? Number(router.query[PAGE_QUERY_PARAM]) : DEFAULT_PAGE;
+  const searchFormNameValue = router.query[SEARCH_PARAMS.SEARCH_FORM.NAME] as string | undefined;
+  const currentPage = router.query[SEARCH_PARAMS.PAGE]
+    ? Number(router.query[SEARCH_PARAMS.PAGE])
+    : DEFAULT_PAGE;
+
   const isNotDefaultPage = currentPage !== DEFAULT_PAGE;
-  const useDefaultData = !(searchFormName || isNotDefaultPage);
+  const useDefaultData = !(searchFormNameValue || isNotDefaultPage);
 
   useEffect(() => {
     if (!useDefaultData) {
-      fetchCharactersPage({ variables: { page: currentPage, filter: { name: searchFormName } } });
+      fetchCharactersPage({
+        variables: {
+          page: currentPage,
+          filter: {
+            name: searchFormNameValue,
+          },
+        },
+      });
     }
-  }, [searchFormName, currentPage, isNotDefaultPage]);
+  }, [searchFormNameValue, currentPage, useDefaultData]);
 
   const characters = useDefaultData ? defaultCharacters : data?.characters;
 
-  if (loading) {
+  if (isLoading) {
     return <ScreenSizeLoader />;
   }
 
   if (!characters?.results.length) {
     return (
       <Container>
-        <SearchForm nameQueryParam={SEARCH_FORM_NAME_QUERY_PARAM} />
+        <SearchForm nameQueryParam={SEARCH_PARAMS.SEARCH_FORM.NAME} />
         <h2>No results found...</h2>
       </Container>
     );
@@ -48,7 +62,7 @@ const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacte
 
   return (
     <Container>
-      <SearchForm nameQueryParam={SEARCH_FORM_NAME_QUERY_PARAM} />
+      <SearchForm nameQueryParam={SEARCH_PARAMS.SEARCH_FORM.NAME} />
 
       <CharactersList>
         {characters.results.map((character) => (
@@ -58,14 +72,16 @@ const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacte
         ))}
       </CharactersList>
 
-      <Pagination initialPage={DEFAULT_PAGE} queryParam={PAGE_QUERY_PARAM} {...characters.info} />
+      <Pagination initialPage={DEFAULT_PAGE} queryParam={SEARCH_PARAMS.PAGE} {...characters.info} />
     </Container>
   );
 };
 
 export default Home;
 
-export const getServerSideProps = async (): Promise<GetServerSidePropsResult<ApiCharactersPageResponse>> => {
+export const getServerSideProps: GetServerSideProps = async (): Promise<
+  GetServerSidePropsResult<ApiCharactersPageResponse>
+> => {
   const { data } = await apolloClient.query<ApiCharactersPageResponse>({
     query: GET_CHARACTERS_PAGE,
     variables: {

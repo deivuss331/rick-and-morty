@@ -1,7 +1,7 @@
 import type { NextPage, GetServerSideProps, GetServerSidePropsResult } from 'next';
 import type { ApiCharacterDetailsResponse, ApiCharacterDetailsVariables } from 'graphQl/queries/characters';
-import Image from 'next/image';
 import styled from 'styled-components';
+import Image from 'next/image';
 import apolloClient from 'apolloClient';
 import { GET_CHARACTER_DETAILS } from 'graphQl/queries/characters';
 import { Card, Container } from 'components/layout';

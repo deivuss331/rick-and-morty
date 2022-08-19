@@ -1,7 +1,7 @@
 import { useRef } from 'react';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { Button, Input } from 'components/form';
-import { useRouter } from 'next/router';
 
 const StyledForm = styled.form`
   display: flex;
@@ -20,13 +20,13 @@ export default function SearchForm({ nameQueryParam }: SearchFormProps) {
   const submitHandler: React.FormEventHandler<HTMLFormElement> = (evt) => {
     evt.preventDefault();
 
-    if (nameInputRef.current == null) return;
-
-    router.push({
-      query: {
-        [nameQueryParam]: nameInputRef.current.value,
-      },
-    });
+    if (nameInputRef.current != null) {
+      router.push({
+        query: {
+          [nameQueryParam]: nameInputRef.current.value,
+        },
+      });
+    }
   };
 
   return (

@@ -3,7 +3,16 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card } from 'components/layout';
-import { StyledImageWrapper } from './CharacterCard.styles';
+
+const StyledImageWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  height: 200px;
+
+  img {
+    object-fit: cover;
+  }
+`;
 
 const StyledTitle = styled.span`
   display: block;

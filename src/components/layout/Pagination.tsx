@@ -1,8 +1,14 @@
 import type { ApiPageable } from 'types';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
+import styled from 'styled-components';
 import { Button } from 'components/form';
-import { StyledNavigation } from './Pagination.styles';
+
+const StyledNavigation = styled.nav`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: ${({ theme }) => theme.space[2]};
+`;
 
 interface PaginationProps extends ApiPageable {
   initialPage: number;

@@ -18,6 +18,7 @@ export default function Pagination({ initialPage, queryParam, pages, prev, next 
     if (newPage != null) {
       router.push({
         query: {
+          ...router.query,
           [queryParam]: newPage,
         },
       });

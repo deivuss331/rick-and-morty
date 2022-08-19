@@ -5,10 +5,12 @@ import { useRouter } from 'next/router';
 import { useLazyQuery } from '@apollo/client';
 import apolloClient from 'apolloClient';
 import { GET_CHARACTERS_PAGE } from 'graphQl/queries/characters';
-import { Container, Pagination, ScreenSizeLoader } from 'components/layout';
+import { Container, Pagination, ScreenSizeLoader, SearchForm } from 'components/layout';
 import { CharactersList, CharacterCard } from 'components/characters';
 
 const DEFAULT_PAGE: number = 1;
+
+const SEARCH_FORM_NAME_QUERY_PARAM: string = 'name';
 const PAGE_QUERY_PARAM: string = 'page';
 
 const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacters }) => {
@@ -18,16 +20,18 @@ const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacte
     ApiCharactersPageVariables
   >(GET_CHARACTERS_PAGE);
 
+  const searchFormName = router.query[SEARCH_FORM_NAME_QUERY_PARAM] as string | undefined;
   const currentPage = router.query[PAGE_QUERY_PARAM] ? Number(router.query[PAGE_QUERY_PARAM]) : DEFAULT_PAGE;
   const isNotDefaultPage = currentPage !== DEFAULT_PAGE;
+  const useDefaultData = !(searchFormName || isNotDefaultPage);
 
   useEffect(() => {
-    if (isNotDefaultPage) {
-      fetchCharactersPage({ variables: { page: currentPage } });
+    if (!useDefaultData) {
+      fetchCharactersPage({ variables: { page: currentPage, filter: { name: searchFormName } } });
     }
-  }, [currentPage, isNotDefaultPage]);
+  }, [searchFormName, currentPage, isNotDefaultPage]);
 
-  const characters = isNotDefaultPage ? data?.characters : defaultCharacters;
+  const characters = useDefaultData ? defaultCharacters : data?.characters;
 
   if (loading) {
     return <ScreenSizeLoader />;
@@ -36,6 +40,7 @@ const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacte
   if (!characters?.results.length) {
     return (
       <Container>
+        <SearchForm nameQueryParam={SEARCH_FORM_NAME_QUERY_PARAM} />
         <h2>No results found...</h2>
       </Container>
     );
@@ -43,6 +48,8 @@ const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacte
 
   return (
     <Container>
+      <SearchForm nameQueryParam={SEARCH_FORM_NAME_QUERY_PARAM} />
+
       <CharactersList>
         {characters.results.map((character) => (
           <li key={character.id}>

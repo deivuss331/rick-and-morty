@@ -15,4 +15,7 @@ export interface ApiCharactersPageResponse {
 
 export interface ApiCharactersPageVariables {
   page: number;
+  filter?: {
+    name?: string;
+  };
 }

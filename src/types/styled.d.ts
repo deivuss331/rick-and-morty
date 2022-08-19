@@ -6,11 +6,15 @@ declare module 'styled-components' {
     color: {
       black: string;
       white: string;
+      grey: string;
       accent: string;
     };
     space: {
       1: string;
       2: string;
+    };
+    zIndex: {
+      screenSizeLoader: number;
     };
   }
 }

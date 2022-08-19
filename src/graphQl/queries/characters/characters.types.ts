@@ -1,3 +1,5 @@
+import type { ApiPageable } from 'types';
+
 export interface ApiCharacterBriefResponse {
   id: string;
   image: string;
@@ -7,11 +9,10 @@ export interface ApiCharacterBriefResponse {
 export interface ApiCharactersPageResponse {
   characters: {
     results: ApiCharacterBriefResponse[];
-    info: {
-      count: number;
-      next: number | null;
-      prev: number | null;
-      pages: number;
-    };
+    info: ApiPageable;
   };
+}
+
+export interface ApiCharactersPageVariables {
+  page: number;
 }

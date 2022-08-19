@@ -1,5 +1,7 @@
+import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from 'styled-components';
 import theme, { GlobalStyle } from 'theme';
+import apolloClient from 'apolloClient';
 
 import 'normalize.css';
 
@@ -9,9 +11,11 @@ interface AppProvidersProps {
 
 export default function AppProviders({ children }: AppProvidersProps) {
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyle />
-      {children}
-    </ThemeProvider>
+    <ApolloProvider client={apolloClient}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyle />
+        {children}
+      </ThemeProvider>
+    </ApolloProvider>
   );
 }

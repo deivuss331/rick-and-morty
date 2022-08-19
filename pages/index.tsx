@@ -8,10 +8,10 @@ import { GET_CHARACTERS_PAGE } from 'graphQl/queries/characters';
 import { Container, Pagination, ScreenSizeLoader, SearchForm } from 'components/layout';
 import { CharactersList, CharacterCard } from 'components/characters';
 
-const DEFAULT_PAGE: number = 1;
+const DEFAULT_PAGE = 1;
 
-const SEARCH_FORM_NAME_QUERY_PARAM: string = 'name';
-const PAGE_QUERY_PARAM: string = 'page';
+const SEARCH_FORM_NAME_QUERY_PARAM = 'name';
+const PAGE_QUERY_PARAM = 'page';
 
 const Home: NextPage<ApiCharactersPageResponse> = ({ characters: defaultCharacters }) => {
   const router = useRouter();

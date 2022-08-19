@@ -34,7 +34,7 @@ const CharacterPage: NextPage<ApiCharacterDetailsResponse> = ({ character }) => 
   if (character == null) {
     return (
       <Container>
-        <h1>Sorry but this character doesn't exist...</h1>
+        <h1>Sorry but this character does not exist...</h1>
       </Container>
     );
   }

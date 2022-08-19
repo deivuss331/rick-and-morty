@@ -20,4 +20,9 @@ export default createGlobalStyle<{ theme: DefaultTheme }>`
   p {
     margin: ${({ theme }) => theme.space[2]} 0;
   }
+  
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 `;

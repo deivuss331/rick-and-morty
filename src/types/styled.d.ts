@@ -13,6 +13,9 @@ declare module 'styled-components' {
       1: string;
       2: string;
     };
+    breakpoints: {
+      md: string;
+    };
     zIndex: {
       screenSizeLoader: number;
     };

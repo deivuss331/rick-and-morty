@@ -17,3 +17,19 @@ export const GET_CHARACTERS_PAGE = gql`
     }
   }
 `;
+
+export const GET_CHARACTER_DETAILS = gql`
+  query getCharacter($id: ID!) {
+    character(id: $id) {
+      id
+      image
+      name
+      gender
+      species
+      status
+      location {
+        name
+      }
+    }
+  }
+`;

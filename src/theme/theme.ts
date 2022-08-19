@@ -12,6 +12,9 @@ const theme: DefaultTheme = {
     1: '5px',
     2: '10px',
   },
+  breakpoints: {
+    md: '768px',
+  },
   zIndex: {
     screenSizeLoader: 999,
   },
